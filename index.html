@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="A simple tool to calculate NP (Noble Phantasm) damage for Fate Grand Order.">
@@ -11,349 +12,386 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-158687430-1"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-      gtag('config', 'UA-158687430-1');
+        gtag('config', 'UA-158687430-1');
     </script>
     <title>FGO NP Damage Calculator</title>
 
     <link href="./css/bootstrap.css" rel="stylesheet">
     <link href="./css/form-validation.css" rel="stylesheet">
-  </head>
+</head>
 
-  <body class="bg-light">
+<body class="bg-light">
 
     <div class="container">
-      <div class="py-5 text-center">
-        <h2>FGO Noble Phantasm Damage Calculator v1.8.03
-          <img src="./img/fou.png" hspace="3" width="35"></img>
-        </h2>
-      </div>
-
-      <div class="row">
-        <div class="col-md-4 order-md-2 mb-4">
-          <h4 class="d-flex justify-content-between align-items-center mb-3">
-            <span class="text">Projected Damage</span>
-          </h4>
-          <ul class="list-group mb-3">
-            <li class="list-group-item d-flex justify-content-between lh-condensed">
-              <div>
-                <h6 class="my-0">Low</h6>
-                <input type="number" class="form-control" name="low" id="low" placeholder="0" readonly>
-              </div>
-            </li>
-            <li class="list-group-item d-flex justify-content-between lh-condensed">
-              <div>
-                <h6 class="my-0">Average</h6>
-                <input type="number" class="form-control" name="average" id="average" placeholder="0" readonly>
-              </div>
-            </li>
-            <li class="list-group-item d-flex justify-content-between lh-condensed">
-              <div>
-                <h6 class="my-0">High</h6>
-                <input type="number" class="form-control" name="high" id="high" placeholder="0" readonly>
-              </div>
-            </li>
-          </ul>
-          <p>How to use this Calculator
-            <ul>
-              <li>Class, ATK, and NP Damage Multiplier fields are required.</li>
-              <li>Once you select a Class and Servant, its ATK and NP Multiplier fields will autofill (ATK at max level, ungrailed)</li>
-              <li>Fill in values for any buffs/debuffs and press Calculate.</li>
-              <li>After selecting a class, you can input custom values without having to choose a servant.</li>
-            </ul>
-          </p>
-          <p>Tips
-            <ul>
-              <li>07/14/2021 1.8.03: Updated with LB6 Part 2 servants (312-313)</li>
-              <li><a href="#" data-toggle="modal" data-target="#changeLog">Click to view changelog.</a></li>
-              <li>All NP multiplier values are up-to-date with JP server.</li>
-              <li>Don't forget Passive Skill effects when doing calculations.</li>
-              <li>Keep in mind effects that "activate first" before NP.</li>
-              <li>Hover over the <img src="./img/alert-circle-outline.png" width="20"</img> for more detail about certain fields.</li>
-            </ul>
-          </p>
+        <div class="py-5 text-center">
+            <h2>FGO Noble Phantasm Damage Calculator v1.8.02
+                <img src="./img/fou.png" hspace="3" width="35"></img>
+            </h2>
         </div>
 
-        <div class="col-md-8 order-md-1">
-          <h4 class="mb-3">Servant Info</h4>
-          <form class="needs-validation" novalidate>
-            <div class="row">
-              <div class="col-md-5 mb-3">
-                <label for="servantClass">Class</label>
-                <select class="custom-select d-block w-100" id="servantClass" required>
-                  <option value="" selected = "true" disabled>Choose...</option>
-                  <option value="Saber">Saber</option>
-                  <option value="Archer">Archer</option>
-                  <option value="Lancer">Lancer</option>
-                  <option value="Rider">Rider</option>
-                  <option value="Caster">Caster</option>
-                  <option value="Assassin">Assassin</option>
-                  <option value="Berserker">Berserker</option>
-                  <option value="Ruler">Ruler</option>
-                  <option value="Avenger">Avenger</option>
-                  <option value="Mooncancer">Moon Cancer</option>
-                  <option value="Alterego">Alter Ego</option>
-                  <option value="Foreigner">Foreigner</option>
-                </select>
-                <div class="invalid-feedback">
-                  Please select a class.
-                </div>
-              </div>
-              <div class="col-md-5 mb-3">
-                <label for="state">Servant</label>
-                <select class="custom-select d-block w-100" id="servant">
-                  <option value="" selected = "true" disabled>Choose a class first!</option>
-                </select>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-5 mb-3">
-                <label for="attack">Total ATK</label>
-                <input type="number" class="form-control" id="attack" placeholder="0" value="" min="0" data-bind="value:attack" required>
-                <div class="invalid-feedback">
-                  Valid attack value is required.
-                </div>
-              </div>
-              <div class="col-md-5 mb-3">
-                <label for="NP">NP Damage Multiplier
-                  <img src="./img/alert-circle-outline.png" class="float-right" hspace="5" width="20" data-toggle="tooltip" data-html="true" title="Extra damage mods like Arash's or Chen Gong's overcharge effects are added to their base NP damage multiplier.<br>This also applies to servants that have an OC effect based on remaining HP."></img>
-                </label>
-                <div class="input-group">
-                  <input type="number" class="form-control" id="NP" placeholder="0" value="" min="0" data-bind="value:NP" required>
-                  <div class="input-group-append">
-                    <span class="input-group-text">%</span>
-                  </div>
-                  <div class="invalid-feedback">
-                    Valid NP multiplier is required.
-                  </div>
-                </div>
-              </div>
+        <div class="row">
+            <div class="col-md-4 order-md-2 mb-4">
+                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text">Projected Damage</span>
+                </h4>
+                <ul class="list-group mb-3">
+                    <li class="list-group-item d-flex justify-content-between lh-condensed">
+                        <div>
+                            <h6 class="my-0">Low</h6>
+                            <input type="number" class="form-control" name="low" id="low" placeholder="0" readonly>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-condensed">
+                        <div>
+                            <h6 class="my-0">Average</h6>
+                            <input type="number" class="form-control" name="average" id="average" placeholder="0"
+                                readonly>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-condensed">
+                        <div>
+                            <h6 class="my-0">High</h6>
+                            <input type="number" class="form-control" name="high" id="high" placeholder="0" readonly>
+                        </div>
+                    </li>
+                </ul>
+                <p>How to use this Calculator
+                <ul>
+                    <li>Class, ATK, and NP Damage Multiplier fields are required.</li>
+                    <li>Once you select a Class and Servant, its ATK and NP Multiplier fields will autofill (ATK at max
+                        level,
+                        ungrailed)</li>
+                    <li>Fill in values for any buffs/debuffs and press Calculate.</li>
+                    <li>After selecting a class, you can input custom values without having to choose a servant.</li>
+                </ul>
+                </p>
+                <p>Tips
+                <ul>
+                    <li>06/11/2021 1.8.02: Updated with LB6 servants (309-311)</li>
+                    <li><a href="#" data-toggle="modal" data-target="#changeLog">Click to view changelog.</a></li>
+                    <li>All NP multiplier values are up-to-date with JP server.</li>
+                    <li>Don't forget Passive Skill effects when doing calculations.</li>
+                    <li>Keep in mind effects that "activate first" before NP.</li>
+                    <li>Hover over the <img src="./img/alert-circle-outline.png" width="20" </img> for more detail about
+                        certain
+                        fields.</li>
+                </ul>
+                </p>
             </div>
 
-            <div class="row">
-              <div class ="col-md-10 mb-3">
-                <div class="custom-control custom-checkbox custom-control-inline">
-                  <input type="checkbox" class="custom-control-input" id="grailed" disabled>
-                  <label class="custom-control-label" for="grailed">Max Grails</label>
-                </div>
-                <div class="custom-control custom-checkbox custom-control-inline">
-                  <input type="checkbox" class="custom-control-input" id="fou">
-                  <label class="custom-control-label" for="fou">Fou</label>
-                </div>
-                <div class="custom-control custom-checkbox custom-control-inline">
-                  <input type="checkbox" class="custom-control-input" id="goldFou" disabled>
-                  <label class="custom-control-label" for="goldFou">Golden Fou</label>
-                </div>
-                <div class="custom-control custom-checkbox custom-control-inline">
-                  <input type="checkbox" class="custom-control-input" id="ocButton" disabled>
-                  <label class="custom-control-label" for="ocButton">Overcharge</label>
-                </div>
-                <div class="custom-control custom-checkbox custom-control-inline">
-                  <input type="checkbox" class="custom-control-input" id="npButton" disabled>
-                  <label class="custom-control-label" for="npButton">NP Upgrade
-                    <img src="./img/npupgrade.png" class="float-right" hspace="5" width="20"></img>
-                  </label>
-                </div>
-                <div class="custom-control custom-checkbox custom-control-inline">
-                  <input type="checkbox" class="custom-control-input" id="secondNP" disabled>
-                  <label class="custom-control-label" for="secondNP">2nd NP Upgrade</label>
-                </div>
-              </div>
-            </div>
+            <div class="col-md-8 order-md-1">
+                <h4 class="mb-3">Servant Info</h4>
+                <form class="needs-validation" novalidate>
+                    <div class="row">
+                        <div class="col-md-5 mb-3">
+                            <label for="servantClass">Class</label>
+                            <select class="custom-select d-block w-100" id="servantClass" required>
+                                <option value="" selected="true" disabled>Choose...</option>
+                                <option value="Saber">Saber</option>
+                                <option value="Archer">Archer</option>
+                                <option value="Lancer">Lancer</option>
+                                <option value="Rider">Rider</option>
+                                <option value="Caster">Caster</option>
+                                <option value="Assassin">Assassin</option>
+                                <option value="Berserker">Berserker</option>
+                                <option value="Ruler">Ruler</option>
+                                <option value="Avenger">Avenger</option>
+                                <option value="Mooncancer">Moon Cancer</option>
+                                <option value="Alterego">Alter Ego</option>
+                                <option value="Foreigner">Foreigner</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Please select a class.
+                            </div>
+                        </div>
+                        <div class="col-md-5 mb-3">
+                            <label for="state">Servant</label>
+                            <select class="custom-select d-block w-100" id="servant" required>
+                                <option value="" selected="true" disabled>Choose a class first!</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Please select a servant.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5 mb-3">
+                            <label for="attack">Total ATK</label>
+                            <input type="number" class="form-control" id="attack" placeholder="0" value="" min="0"
+                                data-bind="value:attack" required>
+                            <div class="invalid-feedback">
+                                Valid attack value is required.
+                            </div>
+                        </div>
+                        <div class="col-md-5 mb-3">
+                            <label for="NP">NP Damage Multiplier
+                                <img src="./img/alert-circle-outline.png" class="float-right" hspace="5" width="20"
+                                    data-toggle="tooltip" data-html="true"
+                                    title="Extra damage mods like Arash's or Chen Gong's overcharge effects are added to their base NP damage multiplier.<br>This also applies to servants that have an OC effect based on remaining HP."></img>
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="NP" placeholder="0" value="" min="0"
+                                    data-bind="value:NP" required>
+                                <div class="input-group-append">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                                <div class="invalid-feedback">
+                                    Valid NP multiplier is required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-10 mb-3">
+                            <div class="custom-control custom-checkbox custom-control-inline">
+                                <input type="checkbox" class="custom-control-input" id="grailed" disabled>
+                                <label class="custom-control-label" for="grailed">Max Grails</label>
+                            </div>
+                            <div class="custom-control custom-checkbox custom-control-inline">
+                                <input type="checkbox" class="custom-control-input" id="fou" disabled>
+                                <label class="custom-control-label" for="fou">Fou</label>
+                            </div>
+                            <div class="custom-control custom-checkbox custom-control-inline">
+                                <input type="checkbox" class="custom-control-input" id="goldFou" disabled>
+                                <label class="custom-control-label" for="goldFou">Golden Fou</label>
+                            </div>
+                            <div class="custom-control custom-checkbox custom-control-inline">
+                                <input type="checkbox" class="custom-control-input" id="ocButton" disabled>
+                                <label class="custom-control-label" for="ocButton">Overcharge</label>
+                            </div>
+                            <div class="custom-control custom-checkbox custom-control-inline">
+                                <input type="checkbox" class="custom-control-input" id="npButton" disabled>
+                                <label class="custom-control-label" for="npButton">NP Upgrade
+                                    <img src="./img/npupgrade.png" class="float-right" hspace="5" width="20"></img>
+                                </label>
+                            </div>
+                            <div class="custom-control custom-checkbox custom-control-inline">
+                                <input type="checkbox" class="custom-control-input" id="secondNP" disabled>
+                                <label class="custom-control-label" for="secondNP">2nd NP Upgrade</label>
+                            </div>
+                        </div>
+                    </div>
 
 
-            <div class="row">
-              <div class ="col-md-5 mb-3">
-                <label for="radio">NP Type</label>
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                  <label class="btn btn-custom1 active">
-                    <input type="radio" name="cardoptions" id="buster" autocomplete="off" value="buster" checked>Buster
-                  </label>
-                  <label class="btn btn-custom2">
-                    <input type="radio" name="cardoptions" id="arts" autocomplete="off" value="arts">Arts
-                  </label>
-                  <label class="btn btn-custom3">
-                    <input type="radio" name="cardoptions" id="quick" autocomplete="off" value="quick">Quick
-                  </label>
-                </div>
-              </div>
-              <div class="col-md-3 mb-3">
-                <label for="state">NP Level
-                  <img src="./img/npupgrade.png" width="20" class="float-right" hspace="5" id="npupgraded" data-toggle="tooltip" data-html="true" title="This servant has an NP Upgrade."></img>
-                  <img src="./img/npupgradegray.png" width="20" class="float-right" hspace="5" id="nonnpupgraded" data-toggle="tooltip" data-html="true" title="This servant does not yet have an NP Upgrade.<br>This is a projected NP multiplier."></img>
-                </label>
-                <select class="custom-select d-block w-100" id="npLevel" disabled>
-                  <!--<option value="">Choose...</option>-->
-                  <option value="0">NP 1</option>
-                  <option value="1">NP 2</option>
-                  <option value="2">NP 3</option>
-                  <option value="3">NP 4</option>
-                  <option value="4">NP 5</option>
-                </select>
-              </div>
-              <div class="col-md-2 mb-3">
-                <label for="state">
-                  <img src="./img/overcharge.png" class="float-right" hspace="2" width="37" data-toggle="tooltip" data-html="true" title="NP Overcharge level.<br>For effects that scale with HP, the values are for 1 HP."></img>
-                </label>
-                <select class="custom-select d-block w-100" id="ocLevel" disabled>
-                  <!--<option value="">Choose...</option>-->
-                  <option value="0">1</option>
-                  <option value="1">2</option>
-                  <option value="2">3</option>
-                  <option value="3">4</option>
-                  <option value="4">5</option>
-                </select>
-              </div>
-          </div>
+                    <div class="row">
+                        <div class="col-md-5 mb-3">
+                            <label for="radio">NP Type</label>
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-custom1 active">
+                                    <input type="radio" name="cardoptions" id="buster" autocomplete="off" checked
+                                        value="buster">Buster
+                                </label>
+                                <label class="btn btn-custom2">
+                                    <input type="radio" name="cardoptions" id="arts" autocomplete="off"
+                                        value="arts">Arts
+                                </label>
+                                <label class="btn btn-custom3">
+                                    <input type="radio" name="cardoptions" id="quick" autocomplete="off"
+                                        value="quick">Quick
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="state">NP Level
+                                <img src="./img/npupgrade.png" width="20" class="float-right" hspace="5" id="npupgraded"
+                                    data-toggle="tooltip" data-html="true"
+                                    title="This servant has an NP Upgrade."></img>
+                                <img src="./img/npupgradegray.png" width="20" class="float-right" hspace="5"
+                                    id="nonnpupgraded" data-toggle="tooltip" data-html="true"
+                                    title="This servant does not yet have an NP Upgrade.<br>This is a projected NP multiplier."></img>
+                            </label>
+                            <select class="custom-select d-block w-100" id="npLevel" disabled>
+                                <!--<option value="">Choose...</option>-->
+                                <option value="0">NP 1</option>
+                                <option value="1">NP 2</option>
+                                <option value="2">NP 3</option>
+                                <option value="3">NP 4</option>
+                                <option value="4">NP 5</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label for="state">
+                                <img src="./img/overcharge.png" class="float-right" hspace="2" width="37"
+                                    data-toggle="tooltip" data-html="true"
+                                    title="NP Overcharge level.<br>For effects that scale with HP, the values are for 1 HP."></img>
+                            </label>
+                            <select class="custom-select d-block w-100" id="ocLevel" disabled>
+                                <!--<option value="">Choose...</option>-->
+                                <option value="0">1</option>
+                                <option value="1">2</option>
+                                <option value="2">3</option>
+                                <option value="3">4</option>
+                                <option value="4">5</option>
+                            </select>
+                        </div>
+                    </div>
 
-            <div class="row">
-              <div class="col-md-5 mb-3">
-                <label for="cardBuffs">Card Buffs
-                  <img src="./img/quickup.png" class="float-right" hspace="2" width="20"></img>
-                  <img src="./img/artsup.png" class="float-right" hspace="2" width="20"></img>
-                  <img src="./img/busterup.png" class="float-right" hspace="2" width="20"></img>
-                </label>
-                <div class="input-group">
-                  <input type="number" class="form-control" id="cardBuffs" placeholder="0" value="" min="0" data-bind="value:cardBuffs">
-                  <div class="input-group-append">
-                    <span class="input-group-text">%</span>
-                  </div>
-                  <div class="invalid-feedback">
-                    Valid buff value is required.
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-5 mb-3">
-                <label for="cardDebuffs">Card Debuffs on Enemy
-                  <img src="./img/alert-circle-outline.png" class="float-right" hspace="5" width="20" data-toggle="tooltip" data-html="true" title="<img class='img-thumbnail{background-color:transparent}' hspace='2' width='20' src='./img/busterresistdown.png'/><img class='img-thumbnail{background-color:transparent}' hspace='2' width='20' src='./img/artsresistdown.png'/><img class='img-thumbnail{background-color:transparent}' hspace='2' width='20' src='./img/quickresistdown.png'/>"></img>
-                </label>
-                <div class="input-group">
-                  <input type="number" class="form-control" id="cardDebuffs" placeholder="0" value="" min="0" data-bind="value:cardDebuffs">
-                  <div class="input-group-append">
-                    <span class="input-group-text">%</span>
-                  </div>
-                  <div class="invalid-feedback">
-                    Valid debuff value is required.
-                  </div>
-                </div>
-              </div>
-            </div>
+                    <div class="row">
+                        <div class="col-md-5 mb-3">
+                            <label for="cardBuffs">Card Buffs
+                                <img src="./img/quickup.png" class="float-right" hspace="2" width="20"></img>
+                                <img src="./img/artsup.png" class="float-right" hspace="2" width="20"></img>
+                                <img src="./img/busterup.png" class="float-right" hspace="2" width="20"></img>
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="cardBuffs" placeholder="0" value=""
+                                    min="0" data-bind="value:cardBuffs">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                                <div class="invalid-feedback">
+                                    Valid buff value is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5 mb-3">
+                            <label for="cardDebuffs">Card Debuffs on Enemy
+                                <img src="./img/alert-circle-outline.png" class="float-right" hspace="5" width="20"
+                                    data-toggle="tooltip" data-html="true"
+                                    title="<img class='img-thumbnail{background-color:transparent}' hspace='2' width='20' src='./img/busterresistdown.png'/><img class='img-thumbnail{background-color:transparent}' hspace='2' width='20' src='./img/artsresistdown.png'/><img class='img-thumbnail{background-color:transparent}' hspace='2' width='20' src='./img/quickresistdown.png'/>"></img>
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="cardDebuffs" placeholder="0" value=""
+                                    min="0" data-bind="value:cardDebuffs">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                                <div class="invalid-feedback">
+                                    Valid debuff value is required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="row">
-              <div class="col-md-5 mb-3">
-                <label for="attackBuffs">Attack Buffs
-                  <img src="./img/attackup.png" class="float-right" hspace="5" width="20"></img>
-                </label>
-                <div class="input-group">
-                  <input type="number" class="form-control" id="attackBuffs" placeholder="0" value="" min="0" data-bind="value:attackBuffs">
-                  <div class="input-group-append">
-                    <span class="input-group-text">%</span>
-                  </div>
-                  <div class="invalid-feedback">
-                    Valid buff value is required.
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-5 mb-3">
-                <label for="defenseDebuffs">Defense Debuffs on Enemy
-                  <img src="./img/defensedown.png" class="float-right" hspace="5" width="20"></img>
-                </label>
-                <div class="input-group">
-                  <input type="number" class="form-control" id="defenseDebuffs" placeholder="0" value="" min="0" data-bind="value:defenseDebuffs">
-                  <div class="input-group-append">
-                    <span class="input-group-text">%</span>
-                  </div>
-                  <div class="invalid-feedback">
-                    Valid debuff value is required.
-                  </div>
-                </div>
-              </div>
-            </div>
+                    <div class="row">
+                        <div class="col-md-5 mb-3">
+                            <label for="attackBuffs">Attack Buffs
+                                <img src="./img/attackup.png" class="float-right" hspace="5" width="20"></img>
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="attackBuffs" placeholder="0" value=""
+                                    min="0" data-bind="value:attackBuffs">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                                <div class="invalid-feedback">
+                                    Valid buff value is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5 mb-3">
+                            <label for="defenseDebuffs">Defense Debuffs on Enemy
+                                <img src="./img/defensedown.png" class="float-right" hspace="5" width="20"></img>
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="defenseDebuffs" placeholder="0" value=""
+                                    min="0" data-bind="value:defenseDebuffs">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                                <div class="invalid-feedback">
+                                    Valid debuff value is required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="row">
-              <div class="col-md-5 mb-3">
-                <label for="NPBuffs">NP Damage Buffs
-                  <img src="./img/npdamageup.png" class="float-right" hspace="5" width="20"></img>
-                </label>
-                <div class="input-group">
-                  <input type="number" class="form-control" id="NPBuffs" placeholder="0" value="" min="0" data-bind="value:NPBuffs">
-                  <div class="input-group-append">
-                    <span class="input-group-text">%</span>
-                  </div>
-                  <div class="invalid-feedback">
-                    Valid buff value is required.
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-5 mb-3">
-                <label for="flatAttack">Flat Damage Attack Buffs
-                  <img src="./img/alert-circle-outline.png" class="float-right" hspace="5" width="20" data-toggle="tooltip" data-html="true" title="Flat damage attack values, like Divinity.<br><b>Not a percentage boost!</b>"></img>
-                </label>
-                  <input type="number" class="form-control" id="flatAttack" placeholder="0" value="" min="0" data-bind="value:flatAttack">
-                  <div class="invalid-feedback">
-                    Valid attack value is required.
-                  </div>
-              </div>
-            </div>
+                    <div class="row">
+                        <div class="col-md-5 mb-3">
+                            <label for="NPBuffs">NP Damage Buffs
+                                <img src="./img/npdamageup.png" class="float-right" hspace="5" width="20"></img>
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="NPBuffs" placeholder="0" value="" min="0"
+                                    data-bind="value:NPBuffs">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                                <div class="invalid-feedback">
+                                    Valid buff value is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5 mb-3">
+                            <label for="flatAttack">Flat Damage Attack Buffs
+                                <img src="./img/alert-circle-outline.png" class="float-right" hspace="5" width="20"
+                                    data-toggle="tooltip" data-html="true"
+                                    title="Flat damage attack values, like Divinity.<br><b>Not a percentage boost!</b>"></img>
+                            </label>
+                            <input type="number" class="form-control" id="flatAttack" placeholder="0" value="" min="0"
+                                data-bind="value:flatAttack">
+                            <div class="invalid-feedback">
+                                Valid attack value is required.
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="row">
-              <div class="col-md-5 mb-3">
-                <label for="SPBuffs">PowerMod Buffs
-                  <img src="./img/alert-circle-outline.png" class="float-right" hspace="5" width="20" data-toggle="tooltip" data-html="true" title="Buffs that 'increase own damage against' something.<br>Buffs like Jack's vs. females would go here.<br>Applies to event bonus CE damage."></img>
-                  <img src="./img/specialattackup.png" class="float-right" hspace="5" width="20"></img>
-                </label>
-                <div class="input-group">
-                  <input type="number" class="form-control" id="SPBuffs" placeholder="0" value="" min="0" data-bind="value:SPBuffs">
-                  <div class="input-group-append">
-                    <span class="input-group-text">%</span>
-                  </div>
-                  <div class="invalid-feedback">
-                    Valid buff value is required.
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-5 mb-3">
-                <label for="NPSPBuffs">NP Extra Damage
-                  <img src="./img/alert-circle-outline.png" class="float-right" hspace="5" width="20" data-toggle="tooltip" data-html="true" title="When the NP 'Deals Extra Damage' to certain things.<br>Multipliers like Mordred's overcharge vs. Arthurs would go here.<br>Calculates using a base of 100%, so if the NP does 150% extra, you'd put 50% in the box."></img>
-                </label>
-                <div class="input-group">
-                  <input type="number" class="form-control" id="NPSPBuffs" placeholder="0" value="" min="0" data-bind="value:NPSPBuffs">
-                  <div class="input-group-append">
-                    <span class="input-group-text">%</span>
-                  </div>
-                  <div class="invalid-feedback">
-                    Valid attack value is required.
-                  </div>
-                </div>
-              </div>
-            </div>
+                    <div class="row">
+                        <div class="col-md-5 mb-3">
+                            <label for="SPBuffs">PowerMod Buffs
+                                <img src="./img/alert-circle-outline.png" class="float-right" hspace="5" width="20"
+                                    data-toggle="tooltip" data-html="true"
+                                    title="Buffs that 'increase own damage against' something.<br>Buffs like Jack's vs. females would go here.<br>Applies to event bonus CE damage."></img>
+                                <img src="./img/specialattackup.png" class="float-right" hspace="5" width="20"></img>
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="SPBuffs" placeholder="0" value="" min="0"
+                                    data-bind="value:SPBuffs">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                                <div class="invalid-feedback">
+                                    Valid buff value is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5 mb-3">
+                            <label for="NPSPBuffs">NP Extra Damage
+                                <img src="./img/alert-circle-outline.png" class="float-right" hspace="5" width="20"
+                                    data-toggle="tooltip" data-html="true"
+                                    title="When the NP 'Deals Extra Damage' to certain things.<br>Multipliers like Mordred's overcharge vs. Arthurs would go here.<br>Calculates using a base of 100%, so if the NP does 150% extra, you'd put 50% in the box."></img>
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="NPSPBuffs" placeholder="0" value=""
+                                    min="0" data-bind="value:NPSPBuffs">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                                <div class="invalid-feedback">
+                                    Valid attack value is required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
 
-              <div class="row">
-                <div class="col-md-5 mb-3">
-                  <label for="state">Man/Earth/Sky Advantage</label>
-                  <select class="custom-select d-block w-100" id="ESAdvantage">
-                    <option value="1">Neutral</option>
-                    <option value="1.1">Yes (1.1x)</option>
-                    <option value="0.9">No (0.9x)</option>
-                  </select>
-                </div>
-                <div class="col-md-5 mb-3">
-                  <label for="state">Advantage</label>
-                  <select class="custom-select d-block w-100" id="advantage">
-                    <!--<option value="">Choose...</option>-->
-                    <option value="1">Neutral</option>
-                    <option value="2">Yes (2x)</option>
-                    <option value="0.5">No (0.5x)</option>
-                    <option value="1.5">Berserker, AlterEgo (1.5x)</option>
-                  </select>
-                </div>
-            </div>
+                    <div class="row">
+                        <div class="col-md-5 mb-3">
+                            <label for="state">Man/Earth/Sky Advantage</label>
+                            <select class="custom-select d-block w-100" id="ESAdvantage">
+                                <option value="1">Neutral</option>
+                                <option value="1.1">Yes (1.1x)</option>
+                                <option value="0.9">No (0.9x)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-5 mb-3">
+                            <label for="state">Advantage</label>
+                            <select class="custom-select d-block w-100" id="advantage">
+                                <!--<option value="">Choose...</option>-->
+                                <option value="1">Neutral</option>
+                                <option value="2">Yes (2x)</option>
+                                <option value="0.5">No (0.5x)</option>
+                                <option value="1.5">Berserker, AlterEgo (1.5x)</option>
+                            </select>
+                        </div>
+                    </div>
 
-            <!--<hr class="mb-4">
+                    <!--<hr class="mb-4">
             <div class="row">
               <div class ="col-md-10 mb-3">
                 <div class="custom-control custom-checkbox custom-control-inline">
@@ -371,121 +409,133 @@
               </div>
             </div>-->
 
-            <hr class="mb-4">
-            <button type="submit" class="btn btn-primary btn-lg">Calculate</button>
-            <button type="reset" class="btn btn-secondary btn-lg">Reset</button>
-          </form>
+                    <hr class="mb-4">
+                    <button type="submit" class="btn btn-primary btn-lg">Calculate</button>
+                </form>
+            </div>
         </div>
-      </div>
 
-      <footer class="my-5 pt-5 text-muted text-center text-small">
-        <p class="mb-1">created by maketakunai (Reverie#0718)</p>
-        <ul class="list-inline">inspired by the work of the following:
-          <li class="list-inline-item"><a href="http://blogs.nrvnqsr.com/entry.php/3309-How-is-damage-calculated">Kyte</a></li>
-          <li class="list-inline-item"><a href="https://fgo.boyakin.net/fgocalc">Boyakin</a></li>
-          <li class="list-inline-item"><a href="https://www9.atwiki.jp/f_go/pages/2342.html">FGO @wiki</a></li>
-        </ul>
-      </footer>
+        <footer class="my-5 pt-5 text-muted text-center text-small">
+            <p class="mb-1">created by maketakunai (Reverie#0718)</p>
+            <ul class="list-inline">inspired by the work of the following:
+                <li class="list-inline-item"><a
+                        href="http://blogs.nrvnqsr.com/entry.php/3309-How-is-damage-calculated">Kyte</a>
+                </li>
+                <li class="list-inline-item"><a href="https://fgo.boyakin.net/fgocalc">Boyakin</a></li>
+                <li class="list-inline-item"><a href="https://www9.atwiki.jp/f_go/pages/2342.html">FGO @wiki</a></li>
+            </ul>
+        </footer>
     </div>
 
     <div class="modal fade" id="changeLog" tabindex="-1" role="dialog" aria-labelledby="logLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="logLabel">NP Calc Changelog</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            06/11/2021 1.8.02: Updated with LB6 servants (309-311)<br>
-            04/26/2021 1.8.01: Updated with new servant (308)<br>
-            04/22/2021 1.8.00: Updated to reflect Strengthening Campaign XIII<br>
-            03/24/2021 1.7.1: Updated to include servant (306)<br>
-            02/10/2021 1.7.0: Updated to include servant (305)<br>
-            01/20/2021 1.6.9: Updated to include servants (303 & 304)<br>
-            01/01/2021 1.6.8: Happy new year! Updated to include Senji Muramasa (302)<br>
-            12/16/2020 1.6.7: Updated for new servants from Xmas 2020<br>
-            12/11/2020 1.6.6: Updated for new servants (299) from LB5.5<br>
-            12/04/2020 1.6.5: Updated for new servants from LB5.5<br>
-            11/27/2020 1.6.4: Updated for Sakata Kintoki/Kato Danzo strengthening<br>
-            11/11/2020 1.6.3: Updated for new servants 295 & 296<br>
-            11/04/2020 1.6.2: Updated to reflect MHXX strengthening<br>
-            10/09/2020 1.6.1: Updated for GudaGuda Yamatai-koku 2020<br>
-            09/23/2020 1.6.0: Fixed incorrect multiplier for upper bound on damage.<br>
-            09/14/2020 1.5.9: Updated for Interlude Campaign 14<br>
-            08/24/2020 1.5.8: Updated for Summer 5 2nd banner servants (~291); Fixed incorrect ATK for 243 & 246<br>
-            08/17/2020 1.5.7: Updated for Summer 5 1st banner servants (~288)<br>
-            08/10/2020 1.5.6: Updated to reflect 5th Anniversary Strengthenings<br>
-            07/22/2020 1.5.5: Updated to reflect Ooku Strengthenings<br>
-            07/15/2020 1.5.4: Updated to reflect CCC Main Interlude Strengthenings<br>
-            05/29/2020 1.5.3: Added Fate/Requiem Servant 283<br>
-            05/25/2020 1.5.2: Added Fate/Requiem Servants 281 & 282<br>
-            05/04/2020 1.5.1: Allows toggling of upgraded NP multipliers even for servants without upgrades (except for Altria Alter & Santa)<br>
-            05/04/2020 1.5.0: Various UI adjustments, added toggle for upgraded NPs.<br>
-            05/03/2020 1.43: Fixed incorrect damage range calculations with flat damage inputs. Updated with GudaGuda4 strengthenings.<br>
-            04/16/2020 1.42: Added LB5-2 2nd round servant (280)<br>
-            04/09/2020 1.41: Added LB5-2 1st round servants (~279)<br>
-            03/06/2020 1.40: Added CBC2020 servant (277)<br>
-            02/12/2020 1.39: Added servant Sei Shonagon (276)<br>
-            12/31/2019 1.38: Added servant Yang Guifei (275)<br>
-            12/18/2019 1.37: Added LB5-1 servants (~274)<br>
-            12/11/2019 1.36: Updated to reflect Interlude Campaign 11<br>
-            11/28/2019 1.35: Added Nightingale's Xmas servants (~271)<br>
-            10/30/2019 1.34: Added Saber Wars II servants (~269)<br>
-            09/04/2019 1.33: Updated to reflect Interlude Campaign 10<br>
-            08/21/2019 1.32: Added 2nd round Summer 4 servants (~267)<br>
-            08/14/2019 1.31: Added 1st round Summer 4 servants (~264)<br>
-            08/12/2019 1.30: Updated to add selected OverCharges<br>
-            08/10/2019 1.21: Updated to reflect Strengthenings 11<br>
-            08/04/2019 1.20: Added 4th anniversary servants (~260)<br>
-            07/04/2019 1.10: Added GudaGuda4 servants (~252)<br>
-            06/22/2019 1.09: Added 2nd round of LB4 servants (~249)<br>
-            06/15/2019 1.08: Added 1st round of LB4 servants (~246)<br>
-            06/05/2019 1.07: Updated to reflect Interlude Campaign 9<br>
-            04/27/2019 1.06: Added Astraea (242) and Gray (243)<br>
-            04/24/2019 1.05: Updated to reflect Shikis' strengthenings<br>
-            04/18/2019 1.04: Updated to add tooltips<br>
-            03/27/2019 1.03: Added Kama (239)<br>
-            03/20/2019 1.02: Updated to reflect Interlude Campaign 8<br>
-            02/27/2019 1.01: Added Kingprotea (238)<br>
-            02/24/2019 1.00 β: Test version of calculator
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logLabel">NP Calc Changelog</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    04/26/2021 1.8.01: Updated with new servant (308)<br>
+                    04/22/2021 1.8.00: Updated to reflect Strengthening Campaign XIII<br>
+                    03/24/2021 1.7.1: Updated to include servant (306)<br>
+                    02/10/2021 1.7.0: Updated to include servant (305)<br>
+                    01/20/2021 1.6.9: Updated to include servants (303 & 304)<br>
+                    01/01/2021 1.6.8: Happy new year! Updated to include Senji Muramasa (302)<br>
+                    12/16/2020 1.6.7: Updated for new servants from Xmas 2020<br>
+                    12/11/2020 1.6.6: Updated for new servants (299) from LB5.5<br>
+                    12/04/2020 1.6.5: Updated for new servants from LB5.5<br>
+                    11/27/2020 1.6.4: Updated for Sakata Kintoki/Kato Danzo strengthening<br>
+                    11/11/2020 1.6.3: Updated for new servants 295 & 296<br>
+                    11/04/2020 1.6.2: Updated to reflect MHXX strengthening<br>
+                    10/09/2020 1.6.1: Updated for GudaGuda Yamatai-koku 2020<br>
+                    09/23/2020 1.6.0: Fixed incorrect multiplier for upper bound on damage.<br>
+                    09/14/2020 1.5.9: Updated for Interlude Campaign 14<br>
+                    08/24/2020 1.5.8: Updated for Summer 5 2nd banner servants (~291); Fixed incorrect ATK for 243 &
+                    246<br>
+                    08/17/2020 1.5.7: Updated for Summer 5 1st banner servants (~288)<br>
+                    08/10/2020 1.5.6: Updated to reflect 5th Anniversary Strengthenings<br>
+                    07/22/2020 1.5.5: Updated to reflect Ooku Strengthenings<br>
+                    07/15/2020 1.5.4: Updated to reflect CCC Main Interlude Strengthenings<br>
+                    05/29/2020 1.5.3: Added Fate/Requiem Servant 283<br>
+                    05/25/2020 1.5.2: Added Fate/Requiem Servants 281 & 282<br>
+                    05/04/2020 1.5.1: Allows toggling of upgraded NP multipliers even for servants without upgrades
+                    (except for
+                    Altria Alter & Santa)<br>
+                    05/04/2020 1.5.0: Various UI adjustments, added toggle for upgraded NPs.<br>
+                    05/03/2020 1.43: Fixed incorrect damage range calculations with flat damage inputs. Updated with
+                    GudaGuda4
+                    strengthenings.<br>
+                    04/16/2020 1.42: Added LB5-2 2nd round servant (280)<br>
+                    04/09/2020 1.41: Added LB5-2 1st round servants (~279)<br>
+                    03/06/2020 1.40: Added CBC2020 servant (277)<br>
+                    02/12/2020 1.39: Added servant Sei Shonagon (276)<br>
+                    12/31/2019 1.38: Added servant Yang Guifei (275)<br>
+                    12/18/2019 1.37: Added LB5-1 servants (~274)<br>
+                    12/11/2019 1.36: Updated to reflect Interlude Campaign 11<br>
+                    11/28/2019 1.35: Added Nightingale's Xmas servants (~271)<br>
+                    10/30/2019 1.34: Added Saber Wars II servants (~269)<br>
+                    09/04/2019 1.33: Updated to reflect Interlude Campaign 10<br>
+                    08/21/2019 1.32: Added 2nd round Summer 4 servants (~267)<br>
+                    08/14/2019 1.31: Added 1st round Summer 4 servants (~264)<br>
+                    08/12/2019 1.30: Updated to add selected OverCharges<br>
+                    08/10/2019 1.21: Updated to reflect Strengthenings 11<br>
+                    08/04/2019 1.20: Added 4th anniversary servants (~260)<br>
+                    07/04/2019 1.10: Added GudaGuda4 servants (~252)<br>
+                    06/22/2019 1.09: Added 2nd round of LB4 servants (~249)<br>
+                    06/15/2019 1.08: Added 1st round of LB4 servants (~246)<br>
+                    06/05/2019 1.07: Updated to reflect Interlude Campaign 9<br>
+                    04/27/2019 1.06: Added Astraea (242) and Gray (243)<br>
+                    04/24/2019 1.05: Updated to reflect Shikis' strengthenings<br>
+                    04/18/2019 1.04: Updated to add tooltips<br>
+                    03/27/2019 1.03: Added Kama (239)<br>
+                    03/20/2019 1.02: Updated to reflect Interlude Campaign 8<br>
+                    02/27/2019 1.01: Added Kingprotea (238)<br>
+                    02/24/2019 1.00 β: Test version of calculator
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
     <script src="./js/servant-list.js" type="text/javascript"></script>
     <script src="./js/main.js" type="text/javascript"></script>
 
     <script>
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip()
-    })
-    $('#nonnpupgraded').hide();
-    $('#npupgraded').hide();
-      (function() {
-        'use strict';
-        window.addEventListener('load', function() {
-          var forms = document.getElementsByClassName('needs-validation');
-          var validation = Array.prototype.filter.call(forms, function(form) {
-            form.addEventListener('submit', function(event) {
-              if (form.checkValidity() === false) {
-                event.preventDefault();
-                event.stopPropagation();
-              }
-              form.classList.add('was-validated');
-              event.preventDefault();
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+        $('#nonnpupgraded').hide();
+        $('#npupgraded').hide();
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                        event.preventDefault();
+                    }, false);
+                });
             }, false);
-          });
-        }, false);
-      })();
+        })();
     </script>
-  </body>
+</body>
+
 </html>

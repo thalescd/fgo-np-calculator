@@ -159,7 +159,7 @@ const servantList = [
     "id": 14,
     "name": "Atalante",
     "class": "Archer",
-    "attack": "1438, 8633, 10453",
+    "attack": "1438, 862.53, 10453",
     "npmultiplier": "600,800,900,950,1000",
     "ugnpmultiplier": "800,1000,1100,1150,1200",
     "secondupgrade": "",
@@ -3729,30 +3729,6 @@ const servantList = [
     "secondupgrade": "",
     "overcharge": "",
     "deck": "QQAAB(Q)",
-    "npupgrade": 0
-  },
-  {
-    "id": 312,
-    "name": "Fairy Knight Lancelot",
-    "class": "Lancer",
-    "attack": "1878, 12154, 13304",
-    "npmultiplier": "900, 1200, 1350, 1425, 1500",
-    "ugnpmultiplier": "1200,1500,1650,1725,1800",
-    "secondupgrade": "",
-    "overcharge": "",
-    "deck": "QAABB(A)",
-    "npupgrade": 0
-  },
-  {
-    "id": 313,
-    "name": "Percival",
-    "class": "Lancer",
-    "attack": "1528, 9168, 11100",
-    "npmultiplier": "450, 600, 675, 712.5, 750",
-    "ugnpmultiplier": "600,750,825,862.5,900",
-    "secondupgrade": "",
-    "overcharge": "",
-    "deck": "QAABB(A)",
     "npupgrade": 0
   }
 ]
