@@ -1,2 +1,2 @@
-# maketakunai.github.io
-FGO NP damage calculator
+# FGO NP damage calculator
+Original author: maketakunai
