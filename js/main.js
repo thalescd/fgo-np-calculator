@@ -185,11 +185,16 @@ $('#servant').on('change', function () {
 });
 
 $('form').on('submit', function () {
+    if (!$("#servantClass").val()) {
+        return;
+    }
     var atk = parseFloat($('#attack').val()) || 0;
     var np = parseFloat($('#NP').val()) / 100 || 0;
     var cardType = cardDmg($('input[name=cardoptions]:checked').val()) || 0;
-    var servantClass = classDmg($('#servantClass').val()) || 0;
-    var advantage = parseFloat($('#advantage').val()) || 0;
+    var servantClass = classList[$('#servantClass').val()].atkVal || 0;
+    //var advantage = parseFloat($('#advantage').val()) || 0;
+    var advantage = classAdvantage();
+    console.log(advantage);
     var cardBuffs = parseFloat($('#cardBuffs').val()) / 100 || 0;
     var cardDebuffs = parseFloat($('#cardDebuffs').val()) / 100 || 0;
     var attackBuffs = parseFloat($('#attackBuffs').val()) / 100 || 0;
@@ -222,29 +227,6 @@ $('form').on('submit', function () {
     $(window).scrollTop(0);
 });
 
-function classDmg(input) {
-    var classVal = 1;
-    if (input === '') {
-        classVal = 0;
-    }
-    else if ('archer'.indexOf(input.toLowerCase()) > -1) {
-        classVal = 0.95;
-    }
-    else if ('lancer'.indexOf(input.toLowerCase()) > -1) {
-        classVal = 1.05;
-    }
-    else if ('caster'.indexOf(input.toLowerCase()) > -1 ||
-        'assassin'.indexOf(input.toLowerCase()) > -1) {
-        classVal = 0.9;
-    }
-    else if ('berserker'.indexOf(input.toLowerCase()) > -1 ||
-        'ruler'.indexOf(input.toLowerCase()) > -1 ||
-        'avenger'.indexOf(input.toLowerCase()) > -1) {
-        classVal = 1.1;
-    }
-    return classVal;
-}
-
 function cardDmg(input) {
     var cardVal = 0;
     if (input === undefined) {
@@ -261,3 +243,23 @@ function cardDmg(input) {
     }
     return cardVal;
 }
+
+function classAdvantage() {
+    let ServantClassId = $('#servantClass').val() - 1;
+    let enemyClassId = Number($('#enemyClass').val());
+    for (i = 0; i < classList[ServantClassId].Effectiviness.length; i++) {
+        if (classList[ServantClassId].Effectiviness[i].id_list.includes(enemyClassId)) {
+            return classList[ServantClassId].Effectiviness[i].multiplier;
+        }
+    }
+    return 1;
+}
+
+function init() {
+    classList.forEach(function (sclass) {
+        $('#servantClass').append($('<option></option>').val(sclass.id).html(`${sclass.name}`));
+        $('#enemyClass').append($('<option></option>').val(sclass.id).html(`${sclass.name}`));
+    });
+}
+
+init();
