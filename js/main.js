@@ -192,9 +192,7 @@ $('form').on('submit', function () {
     var np = parseFloat($('#NP').val()) / 100 || 0;
     var cardType = cardDmg($('input[name=cardoptions]:checked').val()) || 0;
     var servantClass = classList[$('#servantClass').val()].atkVal || 0;
-    //var advantage = parseFloat($('#advantage').val()) || 0;
     var advantage = classAdvantage();
-    console.log(advantage);
     var cardBuffs = parseFloat($('#cardBuffs').val()) / 100 || 0;
     var cardDebuffs = parseFloat($('#cardDebuffs').val()) / 100 || 0;
     var attackBuffs = parseFloat($('#attackBuffs').val()) / 100 || 0;
@@ -202,18 +200,8 @@ $('form').on('submit', function () {
     var npBuffs = parseFloat($('#NPBuffs').val()) / 100 || 0;
     var flatAttack = parseFloat($('#flatAttack').val()) || 0;
     var spBuffs = parseFloat($('#SPBuffs').val()) / 100 || 0;
-    var esAdvantage = parseFloat($('#ESAdvantage').val()) || 0;
+    var esAdvantage = attrAdvantage();
     var npspBuffs = parseFloat($('#NPSPBuffs').val()) / 100 || 0;
-
-    $('#servantClass').on('change', function () {
-        servantClass = $('#servantClass').val();
-    });
-    $('#advantage').on('change', function () {
-        advantage = $('#advantage').val();
-    });
-    $('#ESAdvantage').on('change', function () {
-        esAdvantage = $('#ESAdvantage').val();
-    });
 
     var total = atk * np * cardType * advantage * servantClass * 0.23 *
         (1 + attackBuffs + defenseDebuffs) *
@@ -255,11 +243,27 @@ function classAdvantage() {
     return 1;
 }
 
+function attrAdvantage() {
+    let ServantAttrId = $('#servantAttribute').val() - 1;
+    let enemyAttrId = Number($('#enemyAttribute').val());
+    for (i = 0; i < attributeList[ServantAttrId].Effectiviness.length; i++) {
+        if (attributeList[ServantAttrId].Effectiviness[i].id_list.includes(enemyAttrId)) {
+            return attributeList[ServantAttrId].Effectiviness[i].multiplier;
+        }
+    }
+    return 1;
+}
+
 function init() {
     classList.forEach(function (sclass) {
         $('#servantClass').append($('<option></option>').val(sclass.id).html(`${sclass.name}`));
         $('#enemyClass').append($('<option></option>').val(sclass.id).html(`${sclass.name}`));
     });
+    attributeList.forEach(function (sattr) {
+        $('#servantAttribute').append($('<option></option>').val(sattr.id).html(`${sattr.name}`));
+        $('#enemyAttribute').append($('<option></option>').val(sattr.id).html(`${sattr.name}`));
+    });
+
 }
 
 init();

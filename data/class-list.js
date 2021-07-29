@@ -112,7 +112,6 @@ const classList = [
         "Effectiviness": [
             { "multiplier": 2, "id_list": [13, 7] },
             { "multiplier": 0.5, "id_list": [12] }
-        ],
-        "notEffective": [12]
+        ]
     }
 ]
